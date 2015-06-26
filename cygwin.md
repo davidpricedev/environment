@@ -2,17 +2,13 @@
 The mintty container for cygwin64 is a bit sketchy yet and slow to start, so maybe cygwin32 is still the best option for now (June 2015)
 
 ## Fix the unreadable blue-on-black text
-Open the ~/.mintty file and add the following (borrowed from http://www.trueneutral.eu/2014/win-proper-term.html).
+Open the ~/.mintty file and add the following (borrowed from https://github.com/karlin/mintty-colors-solarized/blob/master/.minttyrc--solarized-dark).
 This essentially applies an entire color scheme to cygwin that really improves readability.
 
 		BoldAsFont=yes
-		RightClickAction=paste
-		Font=Consolas
-		FontHeight=12
 		Term=xterm-256color
 		BoldAsColour=yes
-
-		Black=0,0,0
+		Black=7,54,66
 		Red=220,50,47
 		Green=133,153,0
 		Yellow=181,137,0
@@ -29,7 +25,7 @@ This essentially applies an entire color scheme to cygwin that really improves r
 		BoldCyan=147,161,161
 		BoldWhite=253,246,227
 		ForegroundColour=238,232,213
-		BackgroundColour=0,0,0
+		BackgroundColour=0,43,54
 		CursorColour=133,153,0
 		
 ## Tweaking
