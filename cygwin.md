@@ -27,6 +27,12 @@ This essentially applies an entire color scheme to cygwin that really improves r
 		ForegroundColour=238,232,213
 		BackgroundColour=0,43,54
 		CursorColour=133,153,0
+		Transparency=medium
+		OpaqueWhenFocused=yes
+		Columns=100
+		Rows=60
+
+
 		
 ## Tweaking
 Also turn on a bit of transparency (especially when not in focus)
