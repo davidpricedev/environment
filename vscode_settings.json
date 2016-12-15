@@ -1,0 +1,10 @@
+// Place your settings in this file to overwrite the default settings
+{
+  "editor.insertSpaces": true,
+  "editor.wordSeparators": "`~!@#$%^&*()=+[{]}\\|;:'\",.<>/?",
+  "editor.wrappingColumn": 140,
+  "editor.wordWrap": true,
+  "files.autoSave": "onWindowChange",
+  "typescript.check.tscVersion": false,
+  "editor.mouseWheelZoom": true
+}
