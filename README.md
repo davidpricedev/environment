@@ -1,2 +1,2 @@
 # environment
-Things I tweak/need in my environment(s)
+Settings for various editors, shells, etc. 
