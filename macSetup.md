@@ -18,7 +18,7 @@ A great initial install setup for mac
 * virtualbox
 * scroll reverser - to fix apples broken mouse scroll wheel
 * slack
-* Karabiner - to fix apples broken key hold-down repeat slowness
+* Karabiner and Karabiner Elements - to fix apples broken key hold-down repeat slowness and remap capslock to esc
 * github desktop
 * Pinta - good, simple image editor
 * grandperspective - disk space analysis tool
@@ -46,3 +46,6 @@ A great initial install setup for mac
 * WARNING!! dont install sierra until Karabiner supports it
 * tune the scroll reverser to start on startup and only reverse the mouse
 * https://github.com/lysyi3m/osx-terminal-themes has some good these for the terminal
+* In mac's system settings set the caps lock to no-action, and the key repeat delay to close to the shortest option, and the key repeat itself as fast as possible
+* Use Karabiner to set the key repeat to 20ms instead of mac's minimums
+* Use Karabiner-Elements to set the caps lock key to be an esc key
