@@ -6,6 +6,9 @@ set smarttab
 set expandtab
 set autoindent
 
+" Casing (smartcase used to smartly detect when to ignore case when searching)
+set smartcase
+
 " Theme / Color
 colors solarized
 
