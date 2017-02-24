@@ -13,6 +13,7 @@ A great initial install setup for mac
 * htop
 * macvim
 * python
+* bash-git-prompt - shows git status right in the bash prompt
 
 ## Direct Download
 * virtualbox
