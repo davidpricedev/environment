@@ -9,7 +9,7 @@ A great initial install setup for mac
 * git
 * yarn
 * wget 
-* node
+* nvm - watch for post install instructions on the prompt!
 * htop
 * macvim
 * python
@@ -50,3 +50,6 @@ A great initial install setup for mac
 * In mac's system settings set the caps lock to no-action, and the key repeat delay to close to the shortest option, and the key repeat itself as fast as possible
 * Use Karabiner to set the key repeat to 20ms instead of mac's minimums
 * Use Karabiner-Elements to set the caps lock key to be an esc key
+* Use nvm to install whatever node versions are needed, example:
+    * `nvm install 4`
+    * `nvm install 6`
