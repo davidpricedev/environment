@@ -35,6 +35,7 @@ A great initial install setup for mac
 * LibreOffice
 * Fork - great git gui, almost as good as gitExtensions
 * Chrome
+* Hyper - an alternative terminal 
 
 ## Other
 * `pip install awscli`
