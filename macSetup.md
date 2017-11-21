@@ -38,6 +38,7 @@ A great initial install setup for mac
 * iTerm2 - an alternative terminal 
 
 ## Setup
+* Enable key repeats: `defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false`
 * Drag applications folder into dock for a windows-like start menu experience
 * tweak all the things
 * tune the scroll reverser to start on startup and only reverse the mouse
