@@ -15,6 +15,7 @@ A great initial install setup for mac
 * python
 * bash-git-prompt - shows git status right in the bash prompt *(requires post-install configuration)*
 * watchman
+* grc
 
 ## Direct Download
 * virtualbox
