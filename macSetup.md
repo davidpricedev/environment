@@ -48,4 +48,5 @@ A great initial install setup for mac
 * tune the scroll reverser to start on startup and only reverse the mouse
 * https://github.com/lysyi3m/osx-terminal-themes has some good themes for the terminal
 * Use Karabiner-Elements to set the caps lock key to be an esc key
+* run `git config --global push.default current` to make `git push` work as expected
 
