@@ -18,7 +18,7 @@ A great initial install setup for mac
 * pyenv - python env manager
 
 ## Direct Download
-* virtualbox
+* sdkman (https://sdkman.io/install) - jvm env manager
 * scroll reverser - to allow the mouse scroll wheel and touch-pad scrolling to go in separate directions
 * slack
 * Karabiner Elements - to remap capslock to esc
@@ -39,6 +39,7 @@ A great initial install setup for mac
 * Fork - great git gui
 * Firefox w/ multi-account-containers extension, Chrome
 * iTerm2 - an better terminal 
+* git bash completion (https://github.com/git/git/blob/master/contrib/completion/git-completion.bash)
 
 ## Setup
 * Enable key repeats: `defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false`
