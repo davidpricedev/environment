@@ -1,52 +1,57 @@
 # Mac Setup
+
 A great initial install setup for mac
 
 ## Apple Store
-* microsoft remote desktop
+
+- microsoft remote desktop
 
 ## Homebrew
-* git
-* yarn
-* wget 
-* nvm - node env manger, watch for post install instructions on the prompt!
-* htop
-* macvim
-* python
-* bash-git-prompt - shows git status right in the bash prompt *(requires post-install configuration)*
-* watchman
-* grc - generic colourizer
-* pyenv - python env manager
+
+- git
+- wget
+- htop
+- macvim
+- rbenv if serious about ruby
+- node or nvm if serious about node
+- python or pyenv if serious about python
+- bash-git-prompt - shows git status right in the bash prompt
+- grc - apply color to output of common shell commands
 
 ## Direct Download
-* sdkman (https://sdkman.io/install) - jvm env manager
-* scroll reverser - to allow the mouse scroll wheel and touch-pad scrolling to go in separate directions
-* slack
-* Karabiner Elements - to remap capslock to esc
-* github desktop
-* Pinta - good, simple, cross-platform, image editor
-* grandperspective - disk space analysis tool (like "windirstat")
-* textwrangler
-* keepassX
-* VimR
-* Jetbrains tools
-  * Toolbox
-  * WebStorm
-  * DataGrip
-  * IntelliJ
-  * PyCharm
-* VSCode
-* LibreOffice
-* Fork - great git gui
-* Firefox w/ multi-account-containers extension, Chrome
-* iTerm2 - an better terminal 
-* git bash completion (https://github.com/git/git/blob/master/contrib/completion/git-completion.bash)
+
+- sdkman (https://sdkman.io/install) - jvm env manager
+- Karabiner Elements - to remap capslock to esc
+- github desktop
+- grandperspective - disk space analysis tool
+- textwrangler
+- VimR
+- JetBrains Toolbox (for Intellij, WebStorm, Datagrip, Pycharm, etc.)
+- Atom
+- VSCode
+- LibreOffice
+- Fork - great git gui
+- Firefox w/ multi-account-containers extension
+- Chrome
+- iTerm2 - an alternative terminal
+
+## Other
+
+- `pip install awscli`
 
 ## Setup
-* Enable key repeats: `defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false`
-* Drag applications folder into dock for a windows-like start menu experience
-* tweak all the things
-* tune the scroll reverser to start on startup and only reverse the mouse
-* https://github.com/lysyi3m/osx-terminal-themes has some good themes for the terminal
-* Use Karabiner-Elements to set the caps lock key to be an esc key
-* run `git config --global push.default current` to make `git push` work as expected
 
+- Enable key repeats: `defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false`
+- Drag applications folder into dock
+- https://github.com/lysyi3m/osx-terminal-themes has some good themes for the terminal
+- In mac's system settings set the caps lock to no-action, and the key repeat delay to be fairly short, and the key repeat itself as fast as possible
+- Use Karabiner-Elements to set the caps lock key to be an esc key
+- Install a ligature-supporting font such as [Victor Mono](https://rubjo.github.io/victor-mono/), [Fira Code](https://github.com/tonsky/FiraCode), or [Monoid](https://github.com/larsenwork/monoid)
+- run `git config --global push.default current` to make `git push` work as expected
+
+## zsh Setup
+
+- install [ohmyzsh](https://github.com/ohmyzsh/ohmyzsh)
+- install [powerline fonts](https://github.com/powerline/fonts) - and configure iterm2 to use one of them
+- drop the .zshrc into ~/
+- set zsh as the default shell

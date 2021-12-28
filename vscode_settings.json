@@ -5,7 +5,23 @@
   "editor.wordSeparators": "`~!@#$%^&*()=+[{]}\\|;:'\",.<>/?",
   "editor.wrappingColumn": 140,
   "editor.wordWrap": true,
+  "editor.minimap.enabled": false,
+  "editor.mouseWheelZoom": true,
+  "editor.lineNumbers": "relative",
+  "editor.fontFamily": "'Victor Mono', 'Fira Code', Monoid, Menlo, Monaco, 'Courier New', monospace",
+  "editor.fontLigatures": true,
+
   "files.autoSave": "onWindowChange",
+  "files.trimTrailingWhitespace": true,
+  "window.zoomLevel": -1,
+  "extensions.ignoreRecommendations": true,
+  "explorer.confirmDragAndDrop": false,
+
+  "git.autofetch": true,
+  "git.confirmSync": false,
+  "git.suggestSmartCommit": false,
+
   "typescript.check.tscVersion": false,
-  "editor.mouseWheelZoom": true
+  "npm.enableScriptExplorer": true,
+  "vim.disableAnnoyingNeovimMessage": true
 }
