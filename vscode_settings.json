@@ -1,5 +1,6 @@
 // Place your settings in this file to overwrite the default settings
-// usually found in ~/Library/Application\ Support/Code/User/settings.json
+// usually found in ~/Library/Application\ Support/Code/User/settings.json on mac
+// found at %APPDATA/Code/User/Settings.json on windows
 {
   "editor.insertSpaces": true,
   "editor.wordSeparators": "`~!@#$%^&*()=+[{]}\\|;:'\",.<>/?",
