@@ -23,3 +23,4 @@
     * Multi-account containers extension
     * momentum extension
 * SharpKeys - to map caps-lock as another ESC key
+* Getting GPG signing of commits to work in WSL is painful: https://www.39digits.com/signed-git-commits-on-wsl2-using-visual-studio-code
