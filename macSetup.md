@@ -13,8 +13,8 @@ A great initial install setup for mac
 - htop
 - macvim
 - rbenv if serious about ruby
-- node or nvm if serious about node
-- python or pyenv if serious about python
+- fnm if serious about node
+- pyenv if serious about python
 - bash-git-prompt - shows git status right in the bash prompt
 - grc - apply color to output of common shell commands
 
@@ -42,7 +42,7 @@ A great initial install setup for mac
 ## Setup
 
 - Enable key repeats: `defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false`
-- Drag applications folder into dock
+- Drag applications folder into dock (might not be possible anymore. The launchpad now functions similarly though)
 - https://github.com/lysyi3m/osx-terminal-themes has some good themes for the terminal
 - In mac's system settings set the caps lock to no-action, and the key repeat delay to be fairly short, and the key repeat itself as fast as possible
 - Use Karabiner-Elements to set the caps lock key to be an esc key
