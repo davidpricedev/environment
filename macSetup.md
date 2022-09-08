@@ -15,16 +15,16 @@ A great initial install setup for mac
 - rbenv if serious about ruby
 - fnm if serious about node
 - pyenv if serious about python
-- bash-git-prompt - shows git status right in the bash prompt
+- bash-git-prompt - shows git status right in the bash prompt (or oh-my-zsh for zsh)
 - grc - apply color to output of common shell commands
 
 ## Direct Download
 
 - sdkman (https://sdkman.io/install) - jvm env manager
 - Karabiner Elements - to remap capslock to esc
+  - I don't think this is necessary anymore, the ability to remap caps-lock to esc is built-in to macos now
 - github desktop
 - grandperspective - disk space analysis tool
-- textwrangler
 - VimR
 - JetBrains Toolbox (for Intellij, WebStorm, Datagrip, Pycharm, etc.)
 - Atom
@@ -44,6 +44,7 @@ A great initial install setup for mac
 - Enable key repeats: `defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false`
 - Drag applications folder into dock (might not be possible anymore. The launchpad now functions similarly though)
 - https://github.com/lysyi3m/osx-terminal-themes has some good themes for the terminal
+- https://iterm2colorschemes.com/ has some good themes for the terminal
 - In mac's system settings set the caps lock to no-action, and the key repeat delay to be fairly short, and the key repeat itself as fast as possible
 - Use Karabiner-Elements to set the caps lock key to be an esc key
 - Install a ligature-supporting font such as [Victor Mono](https://rubjo.github.io/victor-mono/), [Fira Code](https://github.com/tonsky/FiraCode), or [Monoid](https://github.com/larsenwork/monoid)
