@@ -39,3 +39,9 @@ prompt_dir() {
 ###--- Setup GRC (the output colorizer) ---###
 [[ -s "/usr/local/etc/grc.zsh" ]] && source /usr/local/etc/grc.zsh
 
+
+###--- Fix zsh UX nightmare ---###
+unsetopt share_history
+setopt no_share_history
+unsetopt SHARE_HISTORY
+setopt NO_SHARE_HISTORY
