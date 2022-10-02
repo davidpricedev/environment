@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "hashicorp.terraform",
+    "oderwat.indent-rainbow",
+    "yzhang.markdown-all-in-one",
+    "davidanson.vscode-markdownlint",
+    "esbenp.prettier-vscode",
+    "2gua.rainbow-brackets",
+    "rbbit.typescript-hero"
+  ]
+}

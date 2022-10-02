@@ -1,0 +1,23 @@
+{
+  "[terraform]": {
+    "editor.defaultFormatter": "hashicorp.terraform",
+    "editor.formatOnSave": true,
+    "editor.formatOnSaveMode": "file"
+  },
+  "[terraform-vars]": {
+    "editor.defaultFormatter": "hashicorp.terraform",
+    "editor.formatOnSave": true,
+    "editor.formatOnSaveMode": "file"
+  },
+  "files.autoSave": "onFocusChange",
+  "files.exclude": {
+    "**/builds": true,
+    "api/**/*.js": true,
+    ".eslintrc.js": false
+  },
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "file",
+  "typescriptHero.imports.disableImportRemovalOnOrganize": false,
+  "typescriptHero.imports.organizeOnSave": true,
+  "typescriptHero.imports.stringQuoteStyle": "\""
+}
