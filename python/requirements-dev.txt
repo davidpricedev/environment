@@ -1,6 +1,13 @@
+-r ./requirements.txt
 autoflake
 black
 flake8
-pre-commit
-pytest
 invoke
+isort
+pylint
+pylint-pytest
+pytest
+expects
+factory_boy
+pytest-describe
+mypy
