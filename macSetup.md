@@ -48,7 +48,8 @@ A great initial install setup for mac
 - In mac's system settings set the caps lock to no-action, and the key repeat delay to be fairly short, and the key repeat itself as fast as possible
 - Use Karabiner-Elements to set the caps lock key to be an esc key
 - Install a ligature-supporting font such as [Victor Mono](https://rubjo.github.io/victor-mono/), [Fira Code](https://github.com/tonsky/FiraCode), or [Monoid](https://github.com/larsenwork/monoid)
-- run `git config --global push.default current` to make `git push` work as expected
+- run `git config --global push.default current` to make `git push` work as desired
+- run `git config --global alias.root 'rev-parse --show-toplevel'` to have `git root` work to show the root folder of the repository
 
 ## zsh Setup
 
