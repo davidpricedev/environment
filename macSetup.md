@@ -50,6 +50,7 @@ A great initial install setup for mac
 - Install a ligature-supporting font such as [Victor Mono](https://rubjo.github.io/victor-mono/), [Fira Code](https://github.com/tonsky/FiraCode), or [Monoid](https://github.com/larsenwork/monoid)
 - run `git config --global push.default current` to make `git push` work as desired
 - run `git config --global alias.root 'rev-parse --show-toplevel'` to have `git root` work to show the root folder of the repository
+- run `git config --global --add --bool push.autoSetupRemote true` to have `git push` work right away (without doing all the tracking branch wiring) - Note: this one requires git version 2.37 or beyond
 
 ## zsh Setup
 
