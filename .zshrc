@@ -24,7 +24,21 @@ alias pip="pip3"
 alias python="python3"
 # list 10 latest modified branches
 alias gitls="git for-each-ref --count=10 --sort=-committerdate refs/heads/ --format='%(refname:short) (%(color:green)%(committerdate:relative)%(color:reset))'"
+alias git2main="git fetch --all && git switch main && git pull"
+alias coderoot="code `git root`"
+alias coder="coderoot"
+alias reload="source ~/.zshrc"
+alias git-add-all="git add `git root`"
 
+###--- Run command on cd ---###
+function chpwd {
+    git check-ignore -q . 2>/dev/null
+    if [[ $? -eq 1 ]]; then
+        export GIT_ROOT="$(git root)"
+    else
+        unset GIT_ROOT
+    fi
+}
 
 ###--- Override the parts of the prompt ---###
 prompt_date_part="%D{%a-%b%d}"
@@ -35,6 +49,36 @@ prompt_dir() {
   prompt_segment "black" "red" "%2~"
 }
 
+
+# jump to a previous branch
+# input: number of gitls output to jump back to
+gitback() {
+    DEPTH=$1
+    BRANCH=$(git for-each-ref --count=${DEPTH} --sort=-committerdate refs/heads/ --format='%(refname:short)' | tail -n 1)
+    git switch ${BRANCH}
+}
+
+# jump to a new/existing branch
+# input: branch name
+gitjump() {
+    BRANCH_NAME="$1"
+    BASE_BRANCH_NAME="origin/main"
+    echo "fetching ... "
+    git fetch --all
+    echo "checking if branch ${BRANCH_NAME} exists ... "
+    git branch -l | grep $BRANCH_NAME
+    EXIT_CODE=$?
+    if [ $EXIT_CODE -gt 0 ]; then
+        echo "branch appears to be a new one"
+        # if it is a new branch
+        git2main
+        git checkout -b $BRANCH_NAME
+    else
+        echo "branch already exists"
+        # if it is an existing branch
+        git switch $BRANCH_NAME
+    fi
+}
 
 ###--- Setup GRC (the output colorizer) ---###
 [[ -s "/usr/local/etc/grc.zsh" ]] && source /usr/local/etc/grc.zsh
