@@ -6,7 +6,7 @@ A great initial install setup for mac
 
 - microsoft remote desktop
 
-## Homebrew
+## Homebrew (or nix)
 
 - git
 - wget
@@ -14,7 +14,7 @@ A great initial install setup for mac
 - macvim
 - rbenv if serious about ruby
 - fnm if serious about node
-- pyenv if serious about python
+- pyenv if serious about python (homebrew only)
 - bash-git-prompt - shows git status right in the bash prompt (or oh-my-zsh for zsh)
 - grc - apply color to output of common shell commands
 
@@ -41,13 +41,16 @@ A great initial install setup for mac
 
 ## Setup
 
-- Enable key repeats: `defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false`
-- Drag applications folder into dock (might not be possible anymore. The launchpad now functions similarly though)
-- https://github.com/lysyi3m/osx-terminal-themes has some good themes for the terminal
 - https://iterm2colorschemes.com/ has some good themes for the terminal
-- In mac's system settings set the caps lock to no-action, and the key repeat delay to be fairly short, and the key repeat itself as fast as possible
-- Use Karabiner-Elements to set the caps lock key to be an esc key
 - Install a ligature-supporting font such as [Victor Mono](https://rubjo.github.io/victor-mono/), [Fira Code](https://github.com/tonsky/FiraCode), or [Monoid](https://github.com/larsenwork/monoid)
+
+### Keyboard
+
+- Enable key repeats: `defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false`
+- In mac's system settings set the caps lock to act as an escape key (for every keyboard individually), and the key repeat delay to be fairly short, and the key repeat itself as fast as possible
+
+### Git Setup
+
 - run `git config --global push.default current` to make `git push` work as desired
 - run `git config --global alias.root 'rev-parse --show-toplevel'` to have `git root` work to show the root folder of the repository
 - run `git config --global --add --bool push.autoSetupRemote true` to have `git push` work right away (without doing all the tracking branch wiring) - Note: this one requires git version 2.37 or beyond
