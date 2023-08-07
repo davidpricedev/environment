@@ -24,5 +24,6 @@
 
   "typescript.check.tscVersion": false,
   "npm.enableScriptExplorer": true,
-  "vim.disableAnnoyingNeovimMessage": true
+  "vim.disableAnnoyingNeovimMessage": true,
+  "vim.vimrc.enable": true
 }
