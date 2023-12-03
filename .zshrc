@@ -29,6 +29,7 @@ alias coderoot="code `git root`"
 alias coder="coderoot"
 alias reload="source ~/.zshrc"
 alias git-add-all="git add `git root`"
+alias git-plc="git commit --amend --no-edit && git push --force"
 
 ###--- Run command on cd ---###
 function chpwd {
