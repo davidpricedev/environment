@@ -16,7 +16,8 @@ source $ZSH/oh-my-zsh.sh
 ###--- Aliases ---###
 alias zshconfig="vi ~/.zshrc"
 alias ohmyzsh="vi ~/.oh-my-zsh"
-alias vi="vim"
+alias reload="source ~/.zshrc"
+alias vi="nvim"
 alias la="ls -alhF"
 alias ls="ls -hF"
 alias diff="git diff"
@@ -27,9 +28,12 @@ alias gitls="git for-each-ref --count=10 --sort=-committerdate refs/heads/ --for
 alias git2main="git fetch --all && git switch main && git pull"
 alias coderoot="code `git root`"
 alias coder="coderoot"
-alias reload="source ~/.zshrc"
 alias git-add-all="git add `git root`"
 alias git-plc="git commit --amend --no-edit && git push --force"
+alias git-restage="git reset --soft HEAD"
+alias aws-whoami="aws sts get-caller-identity | cat"
+alias gem-clear="gem uninstall -aIx"
+alias awsp="source _awsp"
 
 ###--- Run command on cd ---###
 function chpwd {
