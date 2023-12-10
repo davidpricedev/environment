@@ -11,33 +11,26 @@ A great initial install setup for mac
 - git
 - wget
 - htop
-- macvim
 - rbenv if serious about ruby
 - fnm if serious about node
 - pyenv if serious about python (homebrew only)
-- bash-git-prompt - shows git status right in the bash prompt (or oh-my-zsh for zsh)
-- grc - apply color to output of common shell commands
 
 ## Direct Download
 
-- sdkman (https://sdkman.io/install) - jvm env manager
-- Karabiner Elements - to remap capslock to esc
-  - I don't think this is necessary anymore, the ability to remap caps-lock to esc is built-in to macos now
+- [sdkman](https://sdkman.io/install) - jvm env manager
 - github desktop
 - grandperspective - disk space analysis tool
-- VimR
 - JetBrains Toolbox (for Intellij, WebStorm, Datagrip, Pycharm, etc.)
-- Atom
 - VSCode
 - LibreOffice
-- Fork - great git gui
+- Fork - git gui
 - Firefox w/ multi-account-containers extension
 - Chrome
 - iTerm2 - an alternative terminal
 
 ## Other
 
-- `pip install awscli`
+- [awsp](https://github.com/johnnyopao/awsp)
 
 ## Setup
 
