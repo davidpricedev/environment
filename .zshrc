@@ -17,6 +17,7 @@ source $ZSH/oh-my-zsh.sh
 alias zshconfig="vi ~/.zshrc"
 alias ohmyzsh="vi ~/.oh-my-zsh"
 alias reload="source ~/.zshrc"
+alias vscodeconfig="vi ~/Library/Application\ Support/Code/User/settings.json"
 alias vi="nvim"
 alias la="ls -alhF"
 alias ls="ls -hF"
