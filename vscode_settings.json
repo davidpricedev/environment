@@ -25,5 +25,10 @@
   "typescript.check.tscVersion": false,
   "npm.enableScriptExplorer": true,
   "vim.disableAnnoyingNeovimMessage": true,
-  "vim.vimrc.enable": true
+  "vim.vimrc.enable": true,
+  "editor.fontSize": 13,
+  "workbench.tree.indent": 10,
+  "workbench.colorCustomizations": {
+    "tree.indentGuidesStroke": "#00ff00"
+  }
 }
