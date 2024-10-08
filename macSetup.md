@@ -6,7 +6,7 @@ A great initial install setup for mac
 
 - microsoft remote desktop
 
-## Homebrew (or nix)
+## Homebrew
 
 - git
 - wget
@@ -42,11 +42,7 @@ A great initial install setup for mac
 - Enable key repeats: `defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false`
 - In mac's system settings set the caps lock to act as an escape key (for every keyboard individually), and the key repeat delay to be fairly short, and the key repeat itself as fast as possible
 
-### Git Setup
-
-- run `git config --global push.default current` to make `git push` work as desired
-- run `git config --global alias.root 'rev-parse --show-toplevel'` to have `git root` work to show the root folder of the repository
-- run `git config --global --add --bool push.autoSetupRemote true` to have `git push` work right away (without doing all the tracking branch wiring) - Note: this one requires git version 2.37 or beyond
+### [Git Setup](git.md)
 
 ## zsh Setup
 

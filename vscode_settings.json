@@ -31,4 +31,10 @@
   "workbench.colorCustomizations": {
     "tree.indentGuidesStroke": "#00ff00"
   }
+
+  # VSCode has gotten much worse lately at assuming 4-space indent when it shouldn't
+  # used to be much, much better about this
+  # Can't trust the detection anymore
+  "editor.tabSize": 2,
+  "editor.detectIndentation": false,
 }
