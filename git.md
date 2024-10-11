@@ -5,6 +5,7 @@
 - run `git config --global push.default current` to make `git push` work as desired
 - run `git config --global --add --bool push.autoSetupRemote true` to have `git push` work right away (without doing all the tracking branch wiring) - Note: this one requires git version 2.37 or beyond
 - run `git config --global rerere.enabled true` to have git save the result of a merge conflict resolution (REuse REcorded REsolution). If git sees the same conflict again, it can resolve it in the same way automatically. Especially useful for rebasing
+- run `git config --global init.defaultBranch main` to set the default branch name to main 
 
 ## Per repo optimizations
 
