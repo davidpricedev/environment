@@ -43,6 +43,7 @@ git config --global alias.staash "stash --all"
 - `alias git-restage="git reset --soft HEAD"` - undo the last commit, turning it into a staged set of changes
 - `alias gitls="git for-each-ref --count=10 --sort=-committerdate refs/heads/ --format='%(refname:short) (%(color:green)%(committerdate:relative)%(color:reset))'"` - show a list of the last 10 branches I've worked on
   - useful when juggling a few different work streams
+- `alias git-fetch-all="git fetch --all && git fetch --tags --all --force"` - the "all" you expected from all 
 
 Altogether: 
 
