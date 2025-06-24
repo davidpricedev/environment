@@ -38,8 +38,9 @@ git config --global alias.staash "stash --all"
 ## Shell Scripts
 
 - `alias git2main="git fetch --all && git switch main && git pull"` - jump back to main with everything refreshed
-- `alias git-add-all="git add $(git root)"` - add all regardles of current location within the repo (requires the git root alias above)
+- `alias git-add-all="git add -A"` - add all regardles of current location within the repo
 - `alias git-plc="git commit --amend --no-edit && git push --force-with-lease"` - plc or patch-last-commit - quick way to sneak a typo fix into the last commit (assumes you've staged the changes you want to push)
+- `alias git-aplc="git add -A && git commit --amend --no-edit && git push --force-with-lease"` - aplc or all-patch-last-commit - quick way to sneak a typo fix into the last commit, automatically including all changes
 - `alias git-restage="git reset --soft HEAD"` - undo the last commit, turning it into a staged set of changes
 - `alias gitls="git for-each-ref --count=10 --sort=-committerdate refs/heads/ --format='%(refname:short) (%(color:green)%(committerdate:relative)%(color:reset))'"` - show a list of the last 10 branches I've worked on
   - useful when juggling a few different work streams
@@ -49,7 +50,7 @@ Altogether:
 
 ```shell
 alias git2main="git fetch --all && git switch main && git pull"
-alias git-add-all="git add $(git root)"
+alias git-add-all="git add -A"
 alias git-plc="git commit --amend --no-edit && git push --force-with-lease"
 alias git-restage="git reset --soft HEAD"
 alias gitls="git for-each-ref --count=10 --sort=-committerdate refs/heads/ --format='%(refname:short) (%(color:green)%(committerdate:relative)%(color:reset))'"
