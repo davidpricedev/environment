@@ -86,6 +86,11 @@ gitjump() {
     fi
 }
 
+###--- Python Cleanup ---###
+pyclean () {
+  find . -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
+}
+
 ###--- Setup GRC (the output colorizer) ---###
 [[ -s "/usr/local/etc/grc.zsh" ]] && source /usr/local/etc/grc.zsh
 
