@@ -38,23 +38,30 @@ git config --global alias.staash "stash --all"
 ## Shell Scripts
 
 - `alias git2main="git fetch --all && git switch main && git pull"` - jump back to main with everything refreshed
+  - this is a naive implementation, it can be improved by adding auto-stashing
 - `alias git-add-all="git add -A"` - add all regardles of current location within the repo
-- `alias git-plc="git commit --amend --no-edit && git push --force-with-lease"` - plc or patch-last-commit - quick way to sneak a typo fix into the last commit (assumes you've staged the changes you want to push)
-- `alias git-aplc="git add -A && git commit --amend --no-edit && git push --force-with-lease"` - aplc or all-patch-last-commit - quick way to sneak a typo fix into the last commit, automatically including all changes
+- `alias git-plc="git commit --amend --no-edit && git push --force-with-lease"` - plc or patch-last-commit - quick way to add a typo fix into the last commit (assumes you've staged the changes you want to push)
+- `alias git-aplc="git add -A && git commit --amend --no-edit && git push --force-with-lease"` - aplc or all-patch-last-commit - quick way to add a typo fix into the last commit, automatically including all changes
 - `alias git-restage="git reset --soft HEAD"` - undo the last commit, turning it into a staged set of changes
 - `alias gitls="git for-each-ref --count=10 --sort=-committerdate refs/heads/ --format='%(refname:short) (%(color:green)%(committerdate:relative)%(color:reset))'"` - show a list of the last 10 branches I've worked on
   - useful when juggling a few different work streams
-- `alias git-fetch-all="git fetch --all && git fetch --tags --all --force"` - the "all" you expected from all 
+- `alias git-fetch-all="git fetch --all && git fetch --tags --all --force"` - the "all" you expected from all
 
-Altogether: 
+Altogether:
 
 ```shell
 alias git2main="git fetch --all && git switch main && git pull"
 alias git-add-all="git add -A"
 alias git-plc="git commit --amend --no-edit && git push --force-with-lease"
+alias git-aplc="git add -A && git commit --amend --no-edit && git push --force-with-lease"
 alias git-restage="git reset --soft HEAD"
 alias gitls="git for-each-ref --count=10 --sort=-committerdate refs/heads/ --format='%(refname:short) (%(color:green)%(committerdate:relative)%(color:reset))'"
 ```
+
+## Security
+
+Use `git config --global --add safe.directory $DIR` to mark a directory as safe to use git in.
+Seems to mostly be used around dev containers, but may have other uses too.
 
 ## Notes on cli usage
 
@@ -67,7 +74,7 @@ use `git switch` instead of the older and more confusing `git checkout`.
 
 - Git Graph - nice graphical extension for VSCode
 - Fork - nice graphical git client for macos and windows
-- lazygit - powerful command line tool to manipulate git (really good at squashing)
+- lazygit - powerful command line UI tool to manipulate git
 
 ## Credits
 

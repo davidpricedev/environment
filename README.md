@@ -8,6 +8,8 @@ Settings for various editors, shells, etc.
 
 ## [vim](vim.md)
 
+## [zsh](zsh/README.md)
+
 ## languages
 
 - [javascript](javascript/README.md)

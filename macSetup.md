@@ -2,35 +2,37 @@
 
 A great initial install setup for mac
 
-## Apple Store
-
-- microsoft remote desktop
-
 ## Homebrew
 
 - git
 - wget
+- curl
 - htop
-- rbenv if serious about ruby
-- fnm if serious about node
-- pyenv if serious about python (homebrew only)
+- tree
+- hadolint
+- lazygit
+- neovim
+- pre-commit
+- tf-summarize
+- tflint
+- uv
 
 ## Direct Download
 
 - [sdkman](https://sdkman.io/install) - jvm env manager
-- github desktop
 - grandperspective - disk space analysis tool
 - JetBrains Toolbox (for Intellij, WebStorm, Datagrip, Pycharm, etc.)
 - VSCode
-- LibreOffice
 - Fork - git gui
 - Firefox w/ multi-account-containers extension
 - Chrome
-- iTerm2 - an alternative terminal
+- Wezterm
+- kitty (yet another terminal)
+- iterm2
 
 ## Other
 
-- [awsp](https://github.com/johnnyopao/awsp)
+- [awsum](https://github.com/davidpricedev/awsum)
 
 ## Setup
 
@@ -48,5 +50,5 @@ A great initial install setup for mac
 
 - install [ohmyzsh](https://github.com/ohmyzsh/ohmyzsh)
 - install [powerline fonts](https://github.com/powerline/fonts) - and configure iterm2 to use one of them
-- drop the .zshrc into ~/
+- copy the zsh folder to ~/.zsh and add a source for its index.zsh file to ~/.zshrc
 - set zsh as the default shell
