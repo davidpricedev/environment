@@ -1,6 +1,7 @@
 """
 Every project needs a "Map" class - it allows you to "dot" into dict.
 This saves a lot of annoyance in typing and makes things easier to work with
+Often serves as a bridge on the way from a dict to a properly typed class
 """
 
 
