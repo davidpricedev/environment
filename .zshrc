@@ -1,5 +1,4 @@
-
-###---  ohmyzsh configs ---### 
+###---  ohmyzsh configs ---###
 export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="agnoster"
 # CASE_SENSITIVE="true"
@@ -26,7 +25,6 @@ alias pip="pip3"
 alias python="python3"
 # list 10 latest modified branches
 alias gitls="git for-each-ref --count=10 --sort=-committerdate refs/heads/ --format='%(refname:short) (%(color:green)%(committerdate:relative)%(color:reset))'"
-alias git2main="git fetch --all && git switch main && git pull"
 alias coderoot="code `git root`"
 alias coder="coderoot"
 alias git-add-all="git add `git root`"
@@ -83,6 +81,26 @@ gitjump() {
         echo "branch already exists"
         # if it is an existing branch
         git switch $BRANCH_NAME
+    fi
+}
+
+git2main() {
+    # Check for uncommitted changes
+    STASHED=false
+    if ! git diff-index --quiet HEAD --; then
+        echo "Stashing uncommitted changes..."
+        git stash push -m "Auto-stash before switching to main"
+        STASHED=true
+    fi
+
+    git fetch --all
+    git switch main
+    git pull
+
+    # Apply stash if changes were stashed
+    if [ "$STASHED" = true ]; then
+        echo "Applying stashed changes..."
+        git stash pop
     fi
 }
 
