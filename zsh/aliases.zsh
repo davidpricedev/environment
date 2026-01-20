@@ -12,8 +12,15 @@ else
   alias vi="vim"
 fi
 
-alias la="ls -alhF"
-alias ls="ls -hF"
+# if eza is installed, use it for ls aliases
+if command -v eza &> /dev/null; then
+  alias la="eza -alhF"
+  alias ls="eza -hF"
+else
+  alias la="ls -alhF"
+  alias ls="ls -hF"
+fi
+
 alias diff="git diff"
 
 if [[ "$(uname)" == "Darwin" ]]; then
@@ -22,17 +29,16 @@ if [[ "$(uname)" == "Darwin" ]]; then
   alias python="python3"
 fi
 
-# list 10 latest modified branches
+# git aliases
 alias gitls="git for-each-ref --count=10 --sort=-committerdate refs/heads/ --format='%(refname:short) (%(color:green)%(committerdate:relative)%(color:reset))'"
-
-# git quick-patch (manual staging)
 alias git-plc="git commit --amend --no-edit && git push --force"
-# git quick-patch everything
 alias git-aplc="git add -A && git commit --amend --no-edit && git push --force"
-
-# deletes a commit, moving the commit to staging
 alias git-restage="git reset --soft HEAD"
+alias git-fetch-all="git fetch --all --prune && git fetch --tags --all --force"
 
+alias port-list="sudo lsof -i -P | grep LISTEN | grep :\$PORT"
+alias k="kubectl"
 
 alias aws-whoami="aws sts get-caller-identity | cat"
+alias aws-list-deleted-secrets="aws secretsmanager list-secrets --include-planned-deletion --output json | jq -r '.SecretList[] | select(.DeletedDate!=null) | .Name'"
 alias gem-clear="gem uninstall -aIx"
