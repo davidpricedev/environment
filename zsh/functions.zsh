@@ -19,6 +19,16 @@ git2main() {
     fi
 }
 
+git-nb() {
+  if [ -z "$1" ]; then
+      echo "Usage: git-nb <branch-name>"
+      return 1
+  fi
+
+  git2main
+  git switch -c "$1"
+}
+
 ###--- Python Cleanup ---###
 pyclean () {
   find . -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
