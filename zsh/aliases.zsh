@@ -14,8 +14,8 @@ fi
 
 # if eza is installed, use it for ls aliases
 if command -v eza &> /dev/null; then
-  alias la="eza -alhF"
-  alias ls="eza -hF"
+  alias la="eza -alhF --git --no-user"
+  alias ls="eza -hF --git --no-user"
 else
   alias la="ls -alhF"
   alias ls="ls -hF"

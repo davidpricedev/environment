@@ -24,6 +24,13 @@ git2new() {
     git switch -c "$1"
 }
 
+###--- Wrap git diff in a function so hopefully we get some auto-complete happening ---###
+fdiff() {
+  local f1="$1"
+  local f2="$2"
+  git diff "$f1" "$f2"
+}
+
 ###--- Python Cleanup ---###
 pyclean () {
   find . -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
