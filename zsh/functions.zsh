@@ -17,6 +17,13 @@ git2main() {
     fi
 }
 
+###--- Switch to new branch based on origin/main ---###
+git2new() {
+    local newname="$1"
+    git2main
+    git switch -c "$1"
+}
+
 ###--- Python Cleanup ---###
 pyclean () {
   find . -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
