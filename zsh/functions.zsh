@@ -1,32 +1,37 @@
 ###--- Switch to main safely ---###
 git2main() {
-    # Check for uncommitted changes
-    STASHED=false
-    if ! git diff-index --quiet HEAD --; then
+    local stashed=0
+    # Check if there are any changes to stash
+    if ! git diff-index --quiet HEAD -- 2>/dev/null || [ -n "$(git ls-files --others --exclude-standard)" ]; then
         echo "Stashing uncommitted changes..."
-        git stash push -m "Auto-stash before switching to main"
-        STASHED=true
+        git stash push -u -m "git2main auto-stash $(date +%Y-%m-%d\ %H:%M:%S)"
+        stashed=1
     fi
 
-    git fetch --all
-    git switch main
-    git pull
+    git fetch --all --prune && git switch main && git pull
 
     # Apply stash if changes were stashed
-    if [ "$STASHED" = true ]; then
+    if [ "$stashed" -eq 1 ] && [ $? -eq 0 ]; then
         echo "Applying stashed changes..."
         git stash pop
     fi
 }
 
-git-nb() {
+###--- Switch to new branch based on origin/main ---###
+git2new() {
   if [ -z "$1" ]; then
-      echo "Usage: git-nb <branch-name>"
-      return 1
+    echo "Usage: git2new <branch-name>"
+    return 1
   fi
-
   git2main
   git switch -c "$1"
+}
+
+###--- Wrap git diff in a function so hopefully we get some auto-complete happening ---###
+fdiff() {
+  local f1="$1"
+  local f2="$2"
+  git diff "$f1" "$f2"
 }
 
 ###--- Python Cleanup ---###
