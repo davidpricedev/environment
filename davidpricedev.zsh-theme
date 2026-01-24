@@ -1,153 +1,304 @@
-# Rough goal here is to get a theme that is similar to agnoster,
-#  but with 2 lines of prompt instead of just 1 (similar to jonathan).
-# This gives more flexibility to display more information 
-#   such as: dates & times, git info, aws profile, etc
+### Theme: davidpricedev ZSH Theme
+# Based on the agnoster theme from oh-my-zsh
 
-# TODOs:
-# - Add an AWS Region section
-# - fix up the transitions between colors
-# - pick a better color for the path
+CURRENT_BG='NONE'
 
-function theme_precmd {
-  local TERMWIDTH=$(( COLUMNS - ${ZLE_RPROMPT_INDENT:-1} ))
-
-  PR_FILLBAR=""
-  PR_PWDLEN=""
-
-  local promptsize=${#${(%):-__--(_AWS:__)---()--}}
-  local rubypromptsize=${#${(%)$(ruby_prompt_info)}}
-  local pwdsize=${#${(%):-%~}}
-  local venvpromptsize=$((${#$(virtualenv_prompt_info)}))
-  local awsprofilesize=${#${AWS_PROFILE}}
-
-  # Truncate the path if it's too long.
-  if (( promptsize + rubypromptsize + pwdsize + venvpromptsize + awsprofilesize > TERMWIDTH )); then
-    (( PR_PWDLEN = TERMWIDTH - promptsize ))
-  elif [[ "${langinfo[CODESET]}" = UTF-8 ]]; then
-    PR_FILLBAR="\${(l:$(( TERMWIDTH - (promptsize + rubypromptsize + pwdsize + venvpromptsize + awsprofilesize ) ))::${PR_HBAR}:)}"
-  else
-    PR_FILLBAR="${PR_SHIFT_IN}\${(l:$(( TERMWIDTH - (promptsize + rubypromptsize + pwdsize + venvpromptsize + awsprofilesize ) ))::${altchar[q]:--}:)}${PR_SHIFT_OUT}"
-  fi
-}
-
-function theme_preexec {
-  setopt local_options extended_glob
-  if [[ "$TERM" = "screen" ]]; then
-    local CMD=${1[(wr)^(*=*|sudo|-*)]}
-    echo -n "\ek$CMD\e\\"
-  fi
-}
-
-autoload -U add-zsh-hook
-add-zsh-hook precmd  theme_precmd
-add-zsh-hook preexec theme_preexec
-
-
-# Set the prompt
-
-# Need this so the prompt will work.
-setopt prompt_subst
-
-# See if we can use colors.
-autoload zsh/terminfo
-for color in RED GREEN YELLOW BLUE MAGENTA CYAN WHITE GREY; do
-  typeset -g PR_$color="%{$terminfo[bold]$fg[${(L)color}]%}"
-  typeset -g PR_LIGHT_$color="%{$fg[${(L)color}]%}"
-done
-PR_NO_COLOUR="%{$terminfo[sgr0]%}"
-
-# %{$bg%}%{$fg%}
-# Modify Git prompt
-PR_BRANCH_CHAR=$'\ue0a0'         # 
-ZSH_THEME_GIT_PROMPT_PREFIX=" ${PR_BRANCH_CHAR}"
-# ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%}"
-ZSH_THEME_GIT_PROMPT_SUFFIX=""
-ZSH_THEME_GIT_PROMPT_DIRTY=""
-ZSH_THEME_GIT_PROMPT_CLEAN=""
-
-ZSH_THEME_GIT_PROMPT_ADDED="%{$fg[green]%} %{%G✚%}"
-ZSH_THEME_GIT_PROMPT_MODIFIED="%{$fg[blue]%} %{%G✹%}"
-ZSH_THEME_GIT_PROMPT_DELETED="%{$fg[red]%} %{%G✖%}"
-ZSH_THEME_GIT_PROMPT_RENAMED="%{$fg[magenta]%} %{%G➜%}"
-ZSH_THEME_GIT_PROMPT_UNMERGED="%{$fg[yellow]%} %{%G═%}"
-ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$fg[cyan]%} %{%G✭%}"
-
-# Use extended characters to look nicer if supported.
-if [[ "${langinfo[CODESET]}" = UTF-8 ]]; then
-  PR_SET_CHARSET=""
-  PR_HBAR="─"
-  PR_ULCORNER="┌"
-  PR_LLCORNER="└"
-  PR_URCORNER="┐"
-  PR_LRCORNER="┘"
-else
-  typeset -g -A altchar
-  set -A altchar ${(s..)terminfo[acsc]}
-  # Some stuff to help us draw nice lines
-  PR_SET_CHARSET="%{$terminfo[enacs]%}"
-  PR_SHIFT_IN="%{$terminfo[smacs]%}"
-  PR_SHIFT_OUT="%{$terminfo[rmacs]%}"
-  PR_HBAR="${PR_SHIFT_IN}${altchar[q]:--}${PR_SHIFT_OUT}"
-  PR_ULCORNER="${PR_SHIFT_IN}${altchar[l]:--}${PR_SHIFT_OUT}"
-  PR_LLCORNER="${PR_SHIFT_IN}${altchar[m]:--}${PR_SHIFT_OUT}"
-  PR_LRCORNER="${PR_SHIFT_IN}${altchar[j]:--}${PR_SHIFT_OUT}"
-  PR_URCORNER="${PR_SHIFT_IN}${altchar[k]:--}${PR_SHIFT_OUT}"
-fi
-
-# Decide if we need to set titlebar text.
-case $TERM in
-  xterm*)
-    PR_TITLEBAR=$'%{\e]0;%(!.-=*[ROOT]*=- | .)%n@%m:%~ | ${COLUMNS}x${LINES} | %y\a%}'
-    ;;
-  screen)
-    PR_TITLEBAR=$'%{\e_screen \005 (\005t) | %(!.-=[ROOT]=- | .)%n@%m:%~ | ${COLUMNS}x${LINES} | %y\e\\%}'
-    ;;
-  *)
-    PR_TITLEBAR=""
-    ;;
+case ${SOLARIZED_THEME:-dark} in
+    light)
+      CURRENT_FG=${CURRENT_FG:-'white'}
+      CURRENT_DEFAULT_FG=${CURRENT_DEFAULT_FG:-'white'}
+      ;;
+    *)
+      CURRENT_FG=${CURRENT_FG:-'black'}
+      CURRENT_DEFAULT_FG=${CURRENT_DEFAULT_FG:-'default'}
+      ;;
 esac
 
-# Decide whether to set a screen title
-if [[ "$TERM" = "screen" ]]; then
-  PR_STITLE=$'%{\ekzsh\e\\%}'
-else
-  PR_STITLE=""
-fi
+### Theme Configuration Initialization
+#
+# Override these settings in your ~/.zshrc
 
-PR_dateColor="%{$fg[black]%}%{$bg[blue]%}"
-PR_awsProfileColor="%{$fg[black]%}%{$bg[green]%}"
-PR_gitColor="%{$fg[black]%}%{$bg[yellow]%}"
-PR_pathColor="%{$fg[red]%}%{$bg[black]%}"
-PR_sep=$'\ue0b0' # 
-PR_rsep=$'\ue0b2' # 
-PR_tblueyellow="%{$fg[blue]%}%{$bg[yellow]%}${PR_sep}"
+# Current working directory
+: ${AGNOSTER_DIR_FG:=${CURRENT_FG}}
+: ${AGNOSTER_DIR_BG:=blue}
 
-# cap the size of the aws profile name
-# nonemptyAwsProfile="${AWS_PROFILE:=-none-}"
-# truncatedAwsProfile="${AWS_PROFILE:0:20}"
-# paddedAwsProfile="${(r:20:)AWS_PROFILE}"
-# prefixedAwsProfile="AWS: ${paddedAwsProfile}"
+# user@host
+: ${AGNOSTER_CONTEXT_FG:=${CURRENT_DEFAULT_FG}}
+: ${AGNOSTER_CONTEXT_BG:=black}
 
-# Finally, the prompt.
-PROMPT='${PR_SET_CHARSET}${PR_STITLE}${(e)PR_TITLEBAR}\
-${PR_CYAN}${PR_ULCORNER}${PR_HBAR}\
-${PR_rsep}${PR_pathColor} %${PR_PWDLEN}<...<%~%<< %{$reset_color%}${PR_CYAN}${PR_sep}\
-%{$reset_color%}${PR_GREY}$(virtualenv_prompt_info)$(ruby_prompt_info)${PR_CYAN}${PR_HBAR}${PR_HBAR}${(e)PR_FILLBAR}${PR_HBAR}\
-${PR_rsep}${PR_awsProfileColor} AWS: ${AWS_PROFILE} %{$reset_color%}${PR_CYAN}${PR_sep}\
-${PR_HBAR}${PR_URCORNER}\
+# Git related
+: ${AGNOSTER_GIT_CLEAN_FG:=${CURRENT_FG}}
+: ${AGNOSTER_GIT_CLEAN_BG:=green}
+: ${AGNOSTER_GIT_DIRTY_FG:=black}
+: ${AGNOSTER_GIT_DIRTY_BG:=yellow}
 
-${PR_CYAN}${PR_LLCORNER}${PR_BLUE}${PR_HBAR}${PR_rsep}\
-${PR_dateColor} %D{%H:%M:%S} ${PR_tblueyellow}\
-${PR_gitColor}$(git_prompt_info)$(git_prompt_status) %{$reset_color%}\
-${PR_CYAN}${PR_sep}${PR_HBAR}${PR_HBAR}\
->${PR_NO_COLOUR} '
+# Bazaar related
+: ${AGNOSTER_BZR_CLEAN_FG:=${CURRENT_FG}}
+: ${AGNOSTER_BZR_CLEAN_BG:=green}
+: ${AGNOSTER_BZR_DIRTY_FG:=black}
+: ${AGNOSTER_BZR_DIRTY_BG:=yellow}
 
-# display exitcode on the right when > 0
-return_code="%(?..%{$fg[red]%}%? ↵ %{$reset_color%})"
-RPROMPT=' $return_code${PR_CYAN}${PR_HBAR}${PR_BLUE}${PR_HBAR}\
-(${PR_YELLOW}%D{%a,%b%d}${PR_BLUE})${PR_HBAR}${PR_CYAN}${PR_LRCORNER}${PR_NO_COLOUR}'
+# Mercurial related
+: ${AGNOSTER_HG_NEWFILE_FG:=white}
+: ${AGNOSTER_HG_NEWFILE_BG:=red}
+: ${AGNOSTER_HG_CHANGED_FG:=black}
+: ${AGNOSTER_HG_CHANGED_BG:=yellow}
+: ${AGNOSTER_HG_CLEAN_FG:=${CURRENT_FG}}
+: ${AGNOSTER_HG_CLEAN_BG:=green}
 
-PS2='${PR_CYAN}${PR_HBAR}\
-${PR_BLUE}${PR_HBAR}(\
-${PR_LIGHT_GREEN}%_${PR_BLUE})${PR_HBAR}\
-${PR_CYAN}${PR_HBAR}${PR_NO_COLOUR} '
+# VirtualEnv colors
+: ${AGNOSTER_VENV_FG:=black}
+: ${AGNOSTER_VENV_BG:=blue}
+
+# AWS Profile colors
+: ${AGNOSTER_AWS_PROD_FG:=yellow}
+: ${AGNOSTER_AWS_PROD_BG:=red}
+: ${AGNOSTER_AWS_FG:=black}
+: ${AGNOSTER_AWS_BG:=green}
+
+# Status symbols
+: ${AGNOSTER_STATUS_RETVAL_FG:=red}
+: ${AGNOSTER_STATUS_ROOT_FG:=yellow}
+: ${AGNOSTER_STATUS_JOB_FG:=cyan}
+: ${AGNOSTER_STATUS_FG:=${CURRENT_DEFAULT_FG}}
+: ${AGNOSTER_STATUS_BG:=black}
+
+## Non-Color settings - set to 'true' to enable
+# Show the actual numeric return value rather than a cross symbol.
+: ${AGNOSTER_STATUS_RETVAL_NUMERIC:=false}
+# Show git working dir in the style "/git/root   master  relative/dir" instead of "/git/root/relative/dir   master"
+: ${AGNOSTER_GIT_INLINE:=false}
+# Show the git branch status in the prompt rather than the generic branch symbol
+: ${AGNOSTER_GIT_BRANCH_STATUS:=true}
+
+
+# Special Powerline characters
+
+() {
+  local LC_ALL="" LC_CTYPE="en_US.UTF-8"
+  # NOTE: This segment separator character is correct.  In 2012, Powerline changed
+  # the code points they use for their special characters. This is the new code point.
+  # If this is not working for you, you probably have an old version of the
+  # Powerline-patched fonts installed. Download and install the new version.
+  # Do not submit PRs to change this unless you have reviewed the Powerline code point
+  # history and have new information.
+  # This is defined using a Unicode escape sequence so it is unambiguously readable, regardless of
+  # what font the user is viewing this source code in. Do not replace the
+  # escape sequence with a single literal character.
+  # Do not change this! Do not make it '\u2b80'; that is the old, wrong code point.
+  SEGMENT_SEPARATOR=$'\ue0b0'
+}
+
+alt_separator="➜"
+
+# Begin a segment
+# Takes two arguments, background and foreground. Both can be omitted,
+# rendering default background/foreground.
+prompt_segment() {
+  local bg fg
+  [[ -n $1 ]] && bg="%K{$1}" || bg="%k"
+  [[ -n $2 ]] && fg="%F{$2}" || fg="%f"
+  if [[ $CURRENT_BG != 'NONE' && $1 != $CURRENT_BG ]]; then
+    echo -n " %{$bg%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR%{$fg%} "
+  else
+    echo -n "%{$bg%}%{$fg%} "
+  fi
+  CURRENT_BG=$1
+  [[ -n $3 ]] && echo -n $3
+}
+
+# End the prompt, closing any open segments
+prompt_end() {
+  if [[ -n $CURRENT_BG ]]; then
+    echo -n " %{%k%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR"
+  else
+    echo -n "%{%k%}"
+  fi
+  echo -n "%{%f%}"
+  CURRENT_BG=''
+}
+
+git_toplevel() {
+	local repo_root=$(git rev-parse --show-toplevel)
+	if [[ $repo_root = '' ]]; then
+		# We are in a bare repo. Use git dir as root
+		repo_root=$(git rev-parse --git-dir)
+		if [[ $repo_root = '.' ]]; then
+			repo_root=$PWD
+		fi
+	fi
+	echo -n $repo_root
+}
+
+### Prompt components
+# Each component will draw itself, and hide itself if no information needs to be shown
+
+# Context: user@hostname (who am I and where am I)
+prompt_user_context() {
+  if [[ "$USERNAME" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
+    prompt_segment "$AGNOSTER_CONTEXT_BG" "$AGNOSTER_CONTEXT_FG" "%(!.%{%F{$AGNOSTER_STATUS_ROOT_FG}%}.)%m"
+  fi
+}
+
+prompt_git_relative() {
+  local repo_root=$(git_toplevel)
+  local path_in_repo=$(pwd | sed "s/^$(echo "$repo_root" | sed 's:/:\\/:g;s/\$/\\$/g')//;s:^/::;s:/$::;")
+  if [[ $path_in_repo != '' ]]; then
+    prompt_segment "$AGNOSTER_DIR_BG" "$AGNOSTER_DIR_FG" "$path_in_repo"
+  fi;
+}
+
+git_prompt_status () {
+  if [[ -n "${_OMZ_ASYNC_OUTPUT[_omz_git_prompt_status]}" ]]; then
+    echo -n "${_OMZ_ASYNC_OUTPUT[_omz_git_prompt_status]}"
+  fi
+}
+
+# Git: branch/detached head, dirty status
+prompt_git() {
+  (( $+commands[git] )) || return
+  if [[ "$(command git config --get oh-my-zsh.hide-status 2>/dev/null)" = 1 ]]; then
+    return
+  fi
+  local PL_BRANCH_CHAR
+  () {
+    local LC_ALL="" LC_CTYPE="en_US.UTF-8"
+    PL_BRANCH_CHAR=$'\ue0a0'         # 
+  }
+  local ref dirty mode repo_path
+
+  if [[ "$(command git rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ]]; then
+    repo_path=$(command git rev-parse --git-dir 2>/dev/null)
+    dirty=$(parse_git_dirty)
+    ref=$(command git symbolic-ref HEAD 2> /dev/null) || \
+    ref="◈ $(command git describe --exact-match --tags HEAD 2> /dev/null)" || \
+    ref="➦ $(command git rev-parse --short HEAD 2> /dev/null)"
+    if [[ -n $dirty ]]; then
+      prompt_segment "$AGNOSTER_GIT_DIRTY_BG" "$AGNOSTER_GIT_DIRTY_FG"
+    else
+      prompt_segment "$AGNOSTER_GIT_CLEAN_BG" "$AGNOSTER_GIT_CLEAN_FG"
+    fi
+
+    if [[ $AGNOSTER_GIT_BRANCH_STATUS == 'true' ]]; then
+      local ahead behind
+      ahead=$(command git log --oneline @{upstream}.. 2>/dev/null)
+      behind=$(command git log --oneline ..@{upstream} 2>/dev/null)
+      if [[ -n "$ahead" ]] && [[ -n "$behind" ]]; then
+        PL_BRANCH_CHAR=$'\u21c5'
+      elif [[ -n "$ahead" ]]; then
+        PL_BRANCH_CHAR=$'\u21b1'
+      elif [[ -n "$behind" ]]; then
+        PL_BRANCH_CHAR=$'\u21b0'
+      fi
+    fi
+
+    if [[ -e "${repo_path}/BISECT_LOG" ]]; then
+      mode=" <B>"
+    elif [[ -e "${repo_path}/MERGE_HEAD" ]]; then
+      mode=" >M<"
+    elif [[ -e "${repo_path}/rebase" || -e "${repo_path}/rebase-apply" || -e "${repo_path}/rebase-merge" || -e "${repo_path}/../.dotest" ]]; then
+      mode=" >R>"
+    fi
+
+    setopt promptsubst
+    autoload -Uz vcs_info
+
+    zstyle ':vcs_info:*' enable git
+    zstyle ':vcs_info:*' get-revision true
+    zstyle ':vcs_info:*' check-for-changes true
+    zstyle ':vcs_info:*' stagedstr '✚'
+    zstyle ':vcs_info:*' unstagedstr '±'
+    zstyle ':vcs_info:*' formats ' %u%c'
+    zstyle ':vcs_info:*' actionformats ' %u%c'
+    vcs_info
+    echo -n "${${ref:gs/%/%%}/refs\/heads\//$PL_BRANCH_CHAR }${vcs_info_msg_0_%% }${mode}"
+    [[ $AGNOSTER_GIT_INLINE == 'true' ]] && prompt_git_relative
+  fi
+}
+
+# Dir: current working directory
+prompt_dir() {
+  if [[ $AGNOSTER_GIT_INLINE == 'true' ]] && $(git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
+    # Git repo and inline path enabled, hence only show the git root
+    prompt_segment "black" "red" "$(git_toplevel | sed "s:^$HOME:~:")"
+  else
+    prompt_segment "black" "red" '%~'
+  fi
+}
+
+# Virtualenv: current working virtualenv
+prompt_virtualenv() {
+  if [ -n "$CONDA_DEFAULT_ENV" ]; then
+    prompt_segment magenta $CURRENT_FG "🐍 $CONDA_DEFAULT_ENV"
+  fi
+  if [[ -n "$VIRTUAL_ENV" && -n "$VIRTUAL_ENV_DISABLE_PROMPT" ]]; then
+    prompt_segment "$AGNOSTER_VENV_BG" "$AGNOSTER_VENV_FG" "(${VIRTUAL_ENV:t:gs/%/%%})"
+  fi
+}
+
+# Status:
+# - was there an error
+# - am I root
+# - are there background jobs?
+prompt_status() {
+  local -a symbols
+
+  if [[ $AGNOSTER_STATUS_RETVAL_NUMERIC == 'true' ]]; then
+    [[ $RETVAL -ne 0 ]] && symbols+="%{%F{$AGNOSTER_STATUS_RETVAL_FG}%}$RETVAL"
+  else
+    [[ $RETVAL -ne 0 ]] && symbols+="%{%F{$AGNOSTER_STATUS_RETVAL_FG}%}✘"
+  fi
+  [[ $UID -eq 0 ]] && symbols+="%{%F{$AGNOSTER_STATUS_ROOT_FG}%}⚡"
+  [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="%{%F{$AGNOSTER_STATUS_JOB_FG}%}⚙"
+
+  [[ -n "$symbols" ]] && prompt_segment "$AGNOSTER_STATUS_BG" "$AGNOSTER_STATUS_FG" "$symbols"
+}
+
+#AWS Profile:
+prompt_aws() {
+  [[ -z "$AWS_PROFILE" || "$SHOW_AWS_PROMPT" = false ]] && return
+  case "$AWS_PROFILE" in
+    *) prompt_segment "$AGNOSTER_AWS_BG" "$AGNOSTER_AWS_FG" "AWS: ${AWS_PROFILE:gs/%/%%}" ;;
+  esac
+}
+
+function prompt_date() {
+  # date format like "Wed-Jan21"
+  local prompt_date_part="%D{%a-%b%d}"
+  prompt_segment blue black "$prompt_date_part"
+}
+
+function prompt_time() {
+  local prompt_time_part="%D{%H:%M:%S}"
+  prompt_segment black yellow "$prompt_time_part"
+}
+
+function prompt_sysinfo() {
+  # show macos vs linux and kernel version
+  if [[ "$(uname)" == "Darwin" ]]; then
+    prompt_segment black gray " $(uname -m)"
+    return
+  elif [[ "$(uname)" == "Linux" ]]; then
+    prompt_segment black green "🐧 $(uname -m)"
+    return
+  else
+    prompt_segment black yellow "$(uname -sr)"
+  fi
+}
+
+## Main prompt
+build_prompt() {
+  RETVAL=$?
+  prompt_status
+  prompt_virtualenv
+  prompt_aws
+  prompt_sysinfo
+  prompt_date
+  prompt_dir
+  prompt_git
+  prompt_end
+}
+
+PROMPT='%{%f%b%k%}$(build_prompt)
+$(prompt_time) » '
+export PROMPT
