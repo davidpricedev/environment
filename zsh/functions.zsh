@@ -19,9 +19,12 @@ git2main() {
 
 ###--- Switch to new branch based on origin/main ---###
 git2new() {
-    local newname="$1"
-    git2main
-    git switch -c "$1"
+  if [ -z "$1" ]; then
+    echo "Usage: git2new <branch-name>"
+    return 1
+  fi
+  git2main
+  git switch -c "$1"
 }
 
 ###--- Wrap git diff in a function so hopefully we get some auto-complete happening ---###
