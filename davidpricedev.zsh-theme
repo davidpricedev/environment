@@ -74,22 +74,37 @@ esac
 
 # Special Powerline characters
 
-() {
-  local LC_ALL="" LC_CTYPE="en_US.UTF-8"
-  # NOTE: This segment separator character is correct.  In 2012, Powerline changed
-  # the code points they use for their special characters. This is the new code point.
-  # If this is not working for you, you probably have an old version of the
-  # Powerline-patched fonts installed. Download and install the new version.
-  # Do not submit PRs to change this unless you have reviewed the Powerline code point
-  # history and have new information.
-  # This is defined using a Unicode escape sequence so it is unambiguously readable, regardless of
-  # what font the user is viewing this source code in. Do not replace the
-  # escape sequence with a single literal character.
-  # Do not change this! Do not make it '\u2b80'; that is the old, wrong code point.
-  SEGMENT_SEPARATOR=$'\ue0b0'
-}
+USE_POWERLINE=${USE_POWERLINE:-true}
+if [[ "$USE_POWERLINE" == "true" ]]; then
+  # echo "Using powerline symbols in prompt"
+  local SEGMENT_SEPARATOR=$'\ue0b0'
+else
+  # echo "Using non-powerline symbols in prompt"
+  local SEGMENT_SEPARATOR="$alt_separator"
+fi
 
-alt_separator="➜"
+get_pr_git_spec_char() {
+  local type="$1"
+  if [[ "$USE_POWERLINE" == "true" ]]; then
+    local LC_ALL="" LC_CTYPE="en_US.UTF-8"
+    local PL_BRANCH_CHAR_ANB=$'\u21c5' # Both ahead and behind
+    local PL_BRANCH_CHAR_A=$'\u21b1' # Ahead
+    local PL_BRANCH_CHAR_B=$'\u21b0' # Behind
+    local PL_BRANCH_CHAR_IND=$'\ue0a0'  # branch indicator 
+  else
+    local PL_BRANCH_CHAR_ANB="↕" # Both ahead and behind
+    local PL_BRANCH_CHAR_A="↑" # Ahead
+    local PL_BRANCH_CHAR_B="↓" # Behind
+    local PL_BRANCH_CHAR_IND="🔀"  # Emoji for branch indicator
+  fi
+
+  case "$type" in
+    anb) echo -n "$PL_BRANCH_CHAR_ANB" ;;
+    a) echo -n "$PL_BRANCH_CHAR_A" ;;
+    b) echo -n "$PL_BRANCH_CHAR_B" ;;
+    ind) echo -n "$PL_BRANCH_CHAR_IND" ;;
+  esac
+}
 
 # Begin a segment
 # Takes two arguments, background and foreground. Both can be omitted,
@@ -148,11 +163,11 @@ prompt_git_relative() {
   fi;
 }
 
-git_prompt_status () {
-  if [[ -n "${_OMZ_ASYNC_OUTPUT[_omz_git_prompt_status]}" ]]; then
-    echo -n "${_OMZ_ASYNC_OUTPUT[_omz_git_prompt_status]}"
-  fi
-}
+# git_prompt_status () {
+#   if [[ -n "${_OMZ_ASYNC_OUTPUT[_omz_git_prompt_status]}" ]]; then
+#     echo -n "${_OMZ_ASYNC_OUTPUT[_omz_git_prompt_status]}"
+#   fi
+# }
 
 # Git: branch/detached head, dirty status
 prompt_git() {
@@ -160,11 +175,13 @@ prompt_git() {
   if [[ "$(command git config --get oh-my-zsh.hide-status 2>/dev/null)" = 1 ]]; then
     return
   fi
+
   local PL_BRANCH_CHAR
   () {
     local LC_ALL="" LC_CTYPE="en_US.UTF-8"
-    PL_BRANCH_CHAR=$'\ue0a0'         # 
+    PL_BRANCH_CHAR="$(get_pr_git_spec_char ind)"
   }
+
   local ref dirty mode repo_path
 
   if [[ "$(command git rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ]]; then
@@ -173,6 +190,7 @@ prompt_git() {
     ref=$(command git symbolic-ref HEAD 2> /dev/null) || \
     ref="◈ $(command git describe --exact-match --tags HEAD 2> /dev/null)" || \
     ref="➦ $(command git rev-parse --short HEAD 2> /dev/null)"
+
     if [[ -n $dirty ]]; then
       prompt_segment "$AGNOSTER_GIT_DIRTY_BG" "$AGNOSTER_GIT_DIRTY_FG"
     else
@@ -184,11 +202,11 @@ prompt_git() {
       ahead=$(command git log --oneline @{upstream}.. 2>/dev/null)
       behind=$(command git log --oneline ..@{upstream} 2>/dev/null)
       if [[ -n "$ahead" ]] && [[ -n "$behind" ]]; then
-        PL_BRANCH_CHAR=$'\u21c5'
+        PL_BRANCH_CHAR="$(get_pr_git_spec_char anb)"
       elif [[ -n "$ahead" ]]; then
-        PL_BRANCH_CHAR=$'\u21b1'
+        PL_BRANCH_CHAR="$(get_pr_git_spec_char a)"
       elif [[ -n "$behind" ]]; then
-        PL_BRANCH_CHAR=$'\u21b0'
+        PL_BRANCH_CHAR="$(get_pr_git_spec_char b)"
       fi
     fi
 
@@ -254,11 +272,10 @@ prompt_status() {
   [[ -n "$symbols" ]] && prompt_segment "$AGNOSTER_STATUS_BG" "$AGNOSTER_STATUS_FG" "$symbols"
 }
 
-#AWS Profile:
 prompt_aws() {
   [[ -z "$AWS_PROFILE" || "$SHOW_AWS_PROMPT" = false ]] && return
   case "$AWS_PROFILE" in
-    *) prompt_segment "$AGNOSTER_AWS_BG" "$AGNOSTER_AWS_FG" "AWS: ${AWS_PROFILE:gs/%/%%}" ;;
+    *) prompt_segment "$AGNOSTER_AWS_BG" "$AGNOSTER_AWS_FG" "🔸 ${AWS_PROFILE:gs/%/%%}" ;;
   esac
 }
 
@@ -275,14 +292,21 @@ function prompt_time() {
 
 function prompt_sysinfo() {
   # show macos vs linux and kernel version
+  local raw_arch="$(uname -m)"
+  case "$raw_arch" in
+    amd64) local arch="x86_64" ;;  # Linux x86_64
+    x86_64) local arch="x86_64" ;;  # Linux x86_64
+    arm64) local arch="arm64" ;;    # macOS arm64
+    aarch64) local arch="arm64" ;;  # Linux arm64
+    *) local arch="$raw_arch" ;;
+  esac
+
   if [[ "$(uname)" == "Darwin" ]]; then
-    prompt_segment black gray " $(uname -m)"
-    return
+    prompt_segment black gray " $arch"
   elif [[ "$(uname)" == "Linux" ]]; then
-    prompt_segment black green "🐧 $(uname -m)"
-    return
+    prompt_segment black green "🐧 $arch"
   else
-    prompt_segment black yellow "$(uname -sr)"
+    prompt_segment black yellow "$arch"
   fi
 }
 

@@ -27,7 +27,7 @@ git2new() {
   git switch -c "$1"
 }
 
-###--- Wrap git diff in a function so hopefully we get some auto-complete happening ---###
+###--- Wrap git diff in a function so we get some auto-complete happening ---###
 fdiff() {
   local f1="$1"
   local f2="$2"
