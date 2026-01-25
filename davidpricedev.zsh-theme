@@ -133,6 +133,11 @@ prompt_end() {
   CURRENT_BG=''
 }
 
+prompt_end2() {
+  echo -n "%{%f%k%}"
+  CURRENT_BG=''
+}
+
 git_toplevel() {
 	local repo_root=$(git rev-parse --show-toplevel)
 	if [[ $repo_root = '' ]]; then
@@ -291,7 +296,7 @@ function prompt_time() {
 }
 
 function prompt_sysinfo() {
-  # show macos vs linux and kernel version
+  # show arch (and rename aarch64 to arm64)
   local raw_arch="$(uname -m)"
   case "$raw_arch" in
     amd64) local arch="x86_64" ;;  # Linux x86_64
@@ -324,5 +329,5 @@ build_prompt() {
 }
 
 PROMPT='%{%f%b%k%}$(build_prompt)
-$(prompt_time) » '
+$(prompt_time)$(prompt_end2) » '
 export PROMPT
