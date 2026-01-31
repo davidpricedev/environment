@@ -27,6 +27,48 @@ git2new() {
   git switch -c "$1"
 }
 
+###--- Surgical git rebase ---###
+# rebase the commits that are unique to the current branch
+#  onto the target-branch (default target is origin/main)
+# Usage: gitreonto [target-branch]
+gitreonto() {
+  local target_branch="${1:-origin/main}"
+  local branch_name="$(git branch --show-current)"
+
+  if [[ -z "$branch_name" ]]; then
+    echo "Error: Could not determine branch name" >&2
+    return 1
+  fi
+
+  if [[ "$branch_name" == "$target_branch" ]]; then
+    echo "Error: Refusing to rebase $branch_name onto $target_branch" >&2
+    return 1
+  fi
+
+  echo "Fetching all remotes..."
+  git fetch --all || return 1
+
+  local merge_base=""
+  local commit_count=0
+  while read -r commit; do
+    # Check if commit exists in any branch other than current
+    if git branch -a --contains "$commit" | grep -vE "\b$branch_name\b" | grep -q .; then
+      merge_base="$commit"
+      break
+    fi
+    ((commit_count++))
+  done < <(git rev-list "$branch_name")
+
+  if [[ -z "$merge_base" ]]; then
+    echo "Error: Could not find a shared commit with another branch" >&2
+    return 1
+  fi
+
+  echo "Rebasing $commit_count commits from '$branch_name' onto '$target_branch' starting at merge base '$merge_base'..."
+
+  git rebase --onto "$target_branch" "$merge_base" "$branch_name"
+}
+
 ###--- Wrap git diff in a function so we get some auto-complete happening ---###
 fdiff() {
   local f1="$1"
