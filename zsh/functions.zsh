@@ -69,6 +69,38 @@ gitreonto() {
   git rebase --onto "$target_branch" "$merge_base" "$branch_name"
 }
 
+###--- Manually rebase a specified number of commits onto target branch ---###
+gitcreonto() {
+  local commit_count="$1"
+  local target_branch="${2:-origin/main}"
+  local branch_name="$(git branch --show-current)"
+
+  if [[ -z "$commit_count" ]]; then
+    echo "Error: Number of commits to rebase not specified" >&2
+    echo "Usage: gitcreonto <number_of_commits> [target_branch]" >&2
+    return 1
+  fi
+
+  if [[ -z "$branch_name" ]]; then
+    echo "Error: Could not determine branch name" >&2
+    return 1
+  fi
+
+  if [[ "$branch_name" == "$target_branch" ]]; then
+    echo "Error: Refusing to rebase $branch_name onto $target_branch" >&2
+    return 1
+  fi
+
+  echo "Fetching all remotes..."
+  git fetch --all || return 1
+
+  local merge_base="$(git rev-parse HEAD~"$commit_count")"
+
+  echo "Rebasing $commit_count commits from '$branch_name' onto '$target_branch' starting at merge base '$merge_base'..."
+
+  git rebase --onto "$target_branch" "$merge_base" "$branch_name"
+}
+
 ###--- Squash commits ---###
 squash() {
   if [ -z "$1" ] || [ -z "$2" ]; then
