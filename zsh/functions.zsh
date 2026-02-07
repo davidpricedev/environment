@@ -69,6 +69,49 @@ gitreonto() {
   git rebase --onto "$target_branch" "$merge_base" "$branch_name"
 }
 
+###--- Squash commits ---###
+squash() {
+  if [ -z "$1" ] || [ -z "$2" ]; then
+    echo "Usage: squash <number_of_commits> <commit_message>"
+    return 1
+  fi
+
+  local num_commits="$1"
+  local commit_message="$2"
+
+  # Validate that num_commits is a positive integer
+  if ! [[ "$num_commits" =~ ^[0-9]+$ ]] || [ "$num_commits" -le 0 ]; then
+    echo "Error: Number of commits must be a positive integer"
+    return 1
+  fi
+
+  # Check if we have enough commits to squash
+  local total_commits=$(git rev-list --count HEAD)
+  if [ "$num_commits" -gt "$total_commits" ]; then
+    echo "Error: Cannot squash $num_commits commits, only $total_commits available"
+    return 1
+  fi
+
+  # Perform interactive rebase with auto-squash, suppressing both editors
+  GIT_SEQUENCE_EDITOR="sed -i -e '2,\$s/^pick/squash/'" GIT_EDITOR=true git rebase -i "HEAD~$num_commits"
+
+  # Check if rebase was successful
+  if [ $? -ne 0 ]; then
+    echo "Error: Rebase failed"
+    return 1
+  fi
+
+  # Amend the commit message
+  git commit --amend -m "$commit_message"
+
+  if [ $? -eq 0 ]; then
+    echo "Successfully squashed $num_commits commits"
+  else
+    echo "Error: Failed to amend commit message"
+    return 1
+  fi
+}
+
 ###--- Wrap git diff in a function so we get some auto-complete happening ---###
 fdiff() {
   local f1="$1"
