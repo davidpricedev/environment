@@ -27,59 +27,63 @@ git2new() {
   git switch -c "$1"
 }
 
-###--- Surgical git rebase ---###
-# rebase the commits that are unique to the current branch
-#  onto the target-branch (default target is origin/main)
-# Usage: gitreonto [target-branch]
-gitreonto() {
-  local target_branch="${1:-origin/main}"
-  local branch_name="$(git branch --show-current)"
-
-  if [[ -z "$branch_name" ]]; then
-    echo "Error: Could not determine branch name" >&2
-    return 1
-  fi
-
-  if [[ "$branch_name" == "$target_branch" ]]; then
-    echo "Error: Refusing to rebase $branch_name onto $target_branch" >&2
-    return 1
-  fi
-
-  echo "Fetching all remotes..."
-  git fetch --all || return 1
-
+###--- find the nearest ancestor commit shared with another non-linear branch ---###
+_git_count_to_nearest_shared_ancestor() {
+  local branch_name="$1"
   local merge_base=""
-  local commit_count=0
+  local count=0
+
+  # Get all branches the HEAD commit belongs to and exclude them
+  local excluded_branches_array
+  excluded_branches_array=$(git branch -a --contains HEAD | \
+    sed 's/^[* ] //')
+  local excluded_branches_regex
+  # exbr.map(x => `\\b${x}\\b`).join('|') translated to shell
+  excluded_branches_regex=$(echo "$excluded_branches_array" | \
+    sed 's/^/\\b/' | \
+    sed 's/$/\\b/' | \
+    tr '\n' '|' | \
+    sed 's/|$//')
+
   while read -r commit; do
-    # Check if commit exists in any branch other than current
-    if git branch -a --contains "$commit" | grep -vE "\b$branch_name\b" | grep -q .; then
+    # Check if commit exists in any branch other than the excluded branches
+    if git branch -a --contains "$commit" | grep -vE "$excluded_branches_regex" | grep -q .; then
       merge_base="$commit"
       break
     fi
-    ((commit_count++))
+    ((count++))
   done < <(git rev-list "$branch_name")
-
-  if [[ -z "$merge_base" ]]; then
-    echo "Error: Could not find a shared commit with another branch" >&2
-    return 1
-  fi
-
-  echo "Rebasing $commit_count commits from '$branch_name' onto '$target_branch' starting at merge base '$merge_base'..."
-
-  git rebase --onto "$target_branch" "$merge_base" "$branch_name"
+  echo "$count"
 }
 
-###--- Manually rebase a specified number of commits onto target branch ---###
-gitcreonto() {
-  local commit_count="$1"
-  local target_branch="${2:-origin/main}"
-  local branch_name="$(git branch --show-current)"
+###--- Rebase commits onto target branch ---###
+# rebase one or more commits from the current branch
+#  onto the target-branch (default target is origin/main)
+# Without the --c option, it will rebase all commits that are unique to the current branch
+# With the --c option, it will rebase the specified number of commits from the current branch
+# Usage: gitreonto [--c=<commit_count>] [--t=<target-branch>]
+git-reonto() {
+  local commit_count=""
+  local target_branch="origin/main"
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      --c=*)
+        commit_count="${1#*=}"
+        shift
+        ;;
+      --t=*)
+        target_branch="${1#*=}"
+        shift
+        ;;
+      *)
+        echo "Unknown option: $1" >&2
+        echo "Usage: git-reonto [--c=<number_of_commits>] [--t=<target_branch>]" >&2
+        return 1
+        ;;
+    esac
+  done
 
-  if [[ -z "$commit_count" ]]; then
-    echo "Error: Number of commits to rebase not specified" >&2
-    echo "Usage: gitcreonto <number_of_commits> [target_branch]" >&2
-    return 1
-  fi
+  local branch_name="$(git branch --show-current)"
 
   if [[ -z "$branch_name" ]]; then
     echo "Error: Could not determine branch name" >&2
@@ -91,10 +95,18 @@ gitcreonto() {
     return 1
   fi
 
+  if [[ -z "$commit_count" ]]; then
+    read commit_count <<< $(_git_count_to_nearest_shared_ancestor "$branch_name") || return 1
+  fi
+
+  merge_base="$(git rev-parse HEAD~"$commit_count")"
+  if [[ -z "$merge_base" ]]; then
+    echo "Error: Could not determine merge base for $commit_count commits" >&2
+    return 1
+  fi
+
   echo "Fetching all remotes..."
   git fetch --all || return 1
-
-  local merge_base="$(git rev-parse HEAD~"$commit_count")"
 
   echo "Rebasing $commit_count commits from '$branch_name' onto '$target_branch' starting at merge base '$merge_base'..."
 
