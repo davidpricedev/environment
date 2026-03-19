@@ -59,25 +59,23 @@ _git_count_to_nearest_shared_ancestor() {
 ###--- Rebase commits onto target branch ---###
 # rebase one or more commits from the current branch
 #  onto the target-branch (default target is origin/main)
-# Without the --c option, it will rebase all commits that are unique to the current branch
-# With the --c option, it will rebase the specified number of commits from the current branch
-# Usage: gitreonto [--c=<commit_count>] [--t=<target-branch>]
+# Without the -c option, it will rebase all commits that are unique to the current branch
+# With the -c option, it will rebase the specified number of commits from the current branch
+# Usage: gitreonto [-c <commit_count>] [-t <target-branch>]
 git-reonto() {
-  local commit_count=""
-  local target_branch="origin/main"
   while [[ $# -gt 0 ]]; do
     case $1 in
-      --c=*)
-        commit_count="${1#*=}"
-        shift
+      -c)
+        commit_count="$2"
+        shift 2
         ;;
-      --t=*)
-        target_branch="${1#*=}"
-        shift
+      -t)
+        target_branch="$2"
+        shift 2
         ;;
       *)
         echo "Unknown option: $1" >&2
-        echo "Usage: git-reonto [--c=<number_of_commits>] [--t=<target_branch>]" >&2
+        echo "Usage: git-reonto [-c <number_of_commits>] [-t <target_branch>]" >&2
         return 1
         ;;
     esac
@@ -154,6 +152,23 @@ squash() {
     echo "Error: Failed to amend commit message"
     return 1
   fi
+}
+
+###--- Git Worktree Clone ---###
+gitw-clone () {
+  if [ -z "$1" ] || [ -z "$2" ]; then
+    echo "Usage: gitw-clone <uri> <destination-folder>"
+    return 1
+  fi
+  local uri="$1"
+  local dest="$2"
+  mkdir "$dest"
+  cd "$dest"
+  git clone --bare "$1" .git
+  # assume main is the default branch
+  git worktree add -f main main
+  git worktree add -f llm main
+  cd -
 }
 
 ###--- Wrap git diff in a function so we get some auto-complete happening ---###
