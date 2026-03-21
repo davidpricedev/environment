@@ -33,8 +33,9 @@ fi
 alias gitls="git for-each-ref --count=10 --sort=-committerdate refs/heads/ --format='%(refname:short) (%(color:green)%(committerdate:relative)%(color:reset))'"
 alias git-plc="git commit --amend --no-edit && git push --force"
 alias git-aplc="git add -A && git commit --amend --no-edit && git push --force"
-alias git-restage="git reset --soft HEAD"
+alias git-restage="git reset --soft HEAD^"
 alias git-fetch-all="git fetch --all --prune && git fetch --tags --all --force"
+alias gitw="git worktree"
 
 alias port-list="sudo lsof -i -P | grep LISTEN | grep :\$PORT"
 alias k="kubectl"

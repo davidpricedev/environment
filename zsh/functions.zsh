@@ -1,6 +1,32 @@
+###--- Detect the default branch name for the current git repo ---###
+git-default-branch() {
+  local branch
+  # Try remote HEAD symref (no network call)
+  branch=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@')
+  if [[ -n "$branch" ]]; then
+    echo "$branch"
+    return 0
+  fi
+  # Try local HEAD (useful in bare clones)
+  branch=$(git symbolic-ref HEAD 2>/dev/null | sed 's@^refs/heads/@@')
+  if [[ -n "$branch" && "$branch" != "HEAD" ]]; then
+    echo "$branch"
+    return 0
+  fi
+  # Fall back to remote query (requires network)
+  branch=$(git remote show origin 2>/dev/null | awk '/HEAD branch/ {print $NF}')
+  if [[ -n "$branch" ]]; then
+    echo "$branch"
+    return 0
+  fi
+  echo "main"
+}
+
 ###--- Switch to main safely ---###
 git2main() {
     local stashed=0
+    local default_branch
+    default_branch=$(git-default-branch)
     # Check if there are any changes to stash
     if ! git diff-index --quiet HEAD -- 2>/dev/null || [ -n "$(git ls-files --others --exclude-standard)" ]; then
         echo "Stashing uncommitted changes..."
@@ -8,7 +34,7 @@ git2main() {
         stashed=1
     fi
 
-    git fetch --all --prune && git switch main && git pull
+    git fetch --all --prune && git switch "$default_branch" && git pull
 
     # Apply stash if changes were stashed
     if [ "$stashed" -eq 1 ] && [ $? -eq 0 ]; then
@@ -58,11 +84,14 @@ _git_count_to_nearest_shared_ancestor() {
 
 ###--- Rebase commits onto target branch ---###
 # rebase one or more commits from the current branch
-#  onto the target-branch (default target is origin/main)
+#  onto the target-branch (default target is origin/<default-branch>)
 # Without the -c option, it will rebase all commits that are unique to the current branch
 # With the -c option, it will rebase the specified number of commits from the current branch
 # Usage: gitreonto [-c <commit_count>] [-t <target-branch>]
 git-reonto() {
+  local target_branch
+  target_branch="origin/$(git-default-branch)"
+
   while [[ $# -gt 0 ]]; do
     case $1 in
       -c)
@@ -165,9 +194,27 @@ gitw-clone () {
   mkdir "$dest"
   cd "$dest"
   git clone --bare "$1" .git
-  # assume main is the default branch
-  git worktree add -f main main
-  git worktree add -f llm main
+  local default_branch
+  default_branch=$(git-default-branch)
+  git worktree add main "$default_branch"
+  if [ -f .pre-commit-config.yaml ]; then
+    pre-commit install
+  fi
+  cd -
+}
+
+###--- Git Worktree Add ---###
+gitw-add() {
+  if [ -z "$1" ]; then
+    echo "Usage: gitw-add <new-branch/folder-name>"
+    return 1
+  fi
+  local dest="$1"
+  git worktree add "$dest"
+  cd "$dest"
+  if [ -f .pre-commit-config.yaml ]; then
+    pre-commit install
+  fi
   cd -
 }
 
