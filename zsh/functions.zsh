@@ -194,6 +194,7 @@ gitw-clone () {
   mkdir "$dest"
   cd "$dest"
   git clone --bare "$1" .git
+  git config --local --add remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
   local default_branch
   default_branch=$(git-default-branch)
   git worktree add main "$default_branch"
