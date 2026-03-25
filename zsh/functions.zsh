@@ -211,7 +211,9 @@ gitw-add() {
     return 1
   fi
   local dest="$1"
-  git worktree add "$dest"
+  local default_branch
+  default_branch=$(git-default-branch)
+  git worktree add --no-track -b "$dest" "$dest" "origin/$default_branch"
   cd "$dest"
   if [ -f .pre-commit-config.yaml ]; then
     pre-commit install
