@@ -89,9 +89,10 @@ _git_count_to_nearest_shared_ancestor() {
 # With the -c option, it will rebase the specified number of commits from the current branch
 # Usage: gitreonto [-c <commit_count>] [-t <target-branch>]
 git-reonto() {
+  local commit_count
+  local branch_name
   local target_branch
   target_branch="origin/$(git-default-branch)"
-
   while [[ $# -gt 0 ]]; do
     case $1 in
       -c)
@@ -110,7 +111,7 @@ git-reonto() {
     esac
   done
 
-  local branch_name="$(git branch --show-current)"
+  branch_name="$(git branch --show-current)"
 
   if [[ -z "$branch_name" ]]; then
     echo "Error: Could not determine branch name" >&2
@@ -199,12 +200,14 @@ gitw-clone () {
   default_branch=$(git-default-branch)
   git worktree add main "$default_branch"
   if [ -f .pre-commit-config.yaml ]; then
+    cd main
     pre-commit install
+    cd -
   fi
   cd -
 }
 
-###--- Git Worktree Add ---###
+###--- Git Worktree Add - always based on origin/main ---###
 gitw-add() {
   if [ -z "$1" ]; then
     echo "Usage: gitw-add <new-branch/folder-name>"
