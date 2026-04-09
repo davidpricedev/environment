@@ -23,25 +23,38 @@ git-default-branch() {
 }
 
 ###--- Switch to main safely ---###
-git2main() {
-    local stashed=0
-    local default_branch
-    default_branch=$(git-default-branch)
-    # Check if there are any changes to stash
-    if ! git diff-index --quiet HEAD -- 2>/dev/null || [ -n "$(git ls-files --others --exclude-standard)" ]; then
-        echo "Stashing uncommitted changes..."
-        git stash push -u -m "git2main auto-stash $(date +%Y-%m-%d\ %H:%M:%S)"
-        stashed=1
-    fi
+git2main() {                                                                                                                                                                     
+  local stashed=0
+  local default_branch                                                                                                                                                         
+  default_branch=$(git-default-branch)                        
 
-    git fetch --all --prune && git switch "$default_branch" && git pull
+  # Check if there are multiple worktrees
+  local worktree_count
+  worktree_count=$(git worktree list | wc -l)
 
-    # Apply stash if changes were stashed
-    if [ "$stashed" -eq 1 ] && [ $? -eq 0 ]; then
-        echo "Applying stashed changes..."
-        git stash pop
-    fi
-}
+  # Check if there are any changes to stash
+  if ! git diff-index --quiet HEAD -- 2>/dev/null || [ -n "$(git ls-files --others --exclude-standard)" ]; then
+    echo "Stashing uncommitted changes..."
+    git stash push -u -m "git2main auto-stash $(date +%Y-%m-%d\ %H:%M:%S)"
+    stashed=1                                                                                                                                                                
+  fi
+                                                                                                                                                                               
+  git fetch --all --prune                                     
+
+  # If multiple worktrees exist, checkout the origin SHA directly
+  if [ "$worktree_count" -gt 1 ]; then
+    echo "Multiple worktrees detected, checking out origin/$default_branch SHA..."
+    git checkout "origin/$default_branch"
+  else
+    git switch "$default_branch" && git pull
+  fi
+
+  # Apply stash if changes were stashed and previous command succeeded
+  if [ "$stashed" -eq 1 ] && [ $? -eq 0 ]; then
+    echo "Applying stashed changes..."                                                                                                                                       
+    git stash pop
+  fi                                                                                                                                                                           
+}       
 
 ###--- Switch to new branch based on origin/main ---###
 git2new() {
