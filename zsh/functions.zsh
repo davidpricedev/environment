@@ -44,7 +44,7 @@ git2main() {
   # If multiple worktrees exist, checkout the origin SHA directly
   if [ "$worktree_count" -gt 1 ]; then
     echo "Multiple worktrees detected, checking out origin/$default_branch SHA..."
-    git checkout "origin/$default_branch"
+    git checkout --detach "origin/$default_branch"
   else
     git switch "$default_branch" && git pull
   fi
