@@ -17,3 +17,7 @@ HIST_STAMPS="yyyy-mm-dd"
 plugins=(git colorize dotenv colorize copybuffer copyfile dirhistory jsontools z)
 
 source $ZSH/oh-my-zsh.sh
+
+if alias diff &> /dev/null; then
+  unalias diff
+fi

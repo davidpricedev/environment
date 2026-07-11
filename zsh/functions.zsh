@@ -237,13 +237,6 @@ gitw-add() {
   cd -
 }
 
-###--- Wrap git diff in a function so we get some auto-complete happening ---###
-fdiff() {
-  local f1="$1"
-  local f2="$2"
-  git diff "$f1" "$f2"
-}
-
 ###--- Python Cleanup ---###
 pyclean () {
   find . -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
@@ -262,4 +255,18 @@ function chpwd {
     else
         unset GIT_ROOT
     fi
+}
+
+###--- List listening Ports ---###
+function list-ports {
+  local isLinux
+  isLinux=false
+  if [[ "$(uname)" == "Linux" ]]; then
+    isLinux=true
+  fi
+  if "$isLinux"; then
+    ss -tulnp | grep LISTEN
+  else
+    netstat -an | grep LISTEN
+  fi
 }
