@@ -250,3 +250,16 @@ function chpwd {
         unset GIT_ROOT
     fi
 }
+
+function list-ports {
+  local isLinux
+  isLinux=false
+  if [[ "$(uname)" == "Linux" ]]; then
+    isLinux=true
+  fi
+  if "$isLinux"; then
+    ss -tulnp | grep LISTEN
+  else
+    netstat -an | grep LISTEN
+  fi
+}
