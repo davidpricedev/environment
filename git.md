@@ -58,6 +58,35 @@ alias git-restage="git reset --soft HEAD"
 alias gitls="git for-each-ref --count=10 --sort=-committerdate refs/heads/ --format='%(refname:short) (%(color:green)%(committerdate:relative)%(color:reset))'"
 ```
 
+## Stack (chain) of branches
+
+Some work happens as a stack (sometimes called a chain) of branches: branch A off of the default branch, branch B off of A, branch C off of B, and so on. These functions operate on the whole stack at once. The stack is discovered from how the branches were created (each branch's reflog records what it was created from, e.g. `branch: Created from A`), so no extra bookkeeping is needed. The default branch is detected automatically (from the remote HEAD, or the common branch names for local-only repos), so it doesn't matter if it's `main`, `master`, or something else; when an `origin` remote exists the stack is rebased onto `origin/<default>`.
+
+- `stack-rebase` - rebase the whole stack the current branch belongs to onto the default branch
+  - `stack-rebase` rebases the stack of the branch you're on (from its oldest branch up to the top of that stack)
+  - `stack-rebase <branch>` rebases the stack of `<branch>` (you don't have to be on it)
+  - `stack-rebase --abort` gives up on a paused rebase and restores what it can
+  - rebases the oldest branch first, then each branch in turn onto the updated one below it, so the chain stays linear on top of the new default branch
+  - uncommitted changes are stashed first and popped back at the end
+  - on a conflict it PAUSES and saves its state: resolve the conflicted files (`git add` them), then run the same command again to resume - it picks up where it left off and finishes the rest of the stack
+  - if a commit ends up empty during the rebase, `git rebase --skip` it before resuming
+  - when done it reports the new branch tips; push them with `stack-push -f` (the history was rewritten, so the lease-checked force push is what's needed)
+  - the worktree must be clean (it will auto-stash if it isn't), and no branch of the stack may be checked out in another worktree
+- `stack-inject <target-branch> [commit]` - move a commit from the current branch onto an earlier branch in the chain
+  - `stack-inject <target-branch>` moves the top commit (HEAD) of the current branch onto `<target-branch>`
+  - `stack-inject <target-branch> <commit>` moves a specific commit (it must be on the current branch) - handy when you committed a fix on the wrong (too new) branch and want to move it down
+  - the commit is cherry-picked onto the target branch, then every branch above the target is rebased so the chain stays linear; a copy of the moved commit that ends up duplicated on a higher branch is dropped automatically
+  - `stack-inject` (no args) resumes a paused inject; `stack-inject --abort` gives up
+  - on a conflict (in the cherry-pick or in the rebase walk) it PAUSES and saves state: resolve the files, `git add` them, run `stack-inject` again to resume
+  - `<target-branch>` must be an earlier branch in the same stack as the current branch
+- `stack-push` - push the branches in the stack to the remote, in order (oldest first)
+  - `stack-push` pushes the stack of the branch you're on; `stack-push <branch>` pushes the stack of `<branch>`
+  - branches that are already up to date on the remote are skipped
+  - after a `stack-rebase` the remote copies are stale (rewritten history): a plain `stack-push` refuses and tells you to run `stack-push -f`, which pushes with `--force-with-lease` - the lease still protects against clobbering remote commits you don't have locally
+  - it never pushes the default branch (push that with plain `git push`)
+- limitations, for both: the stack must be a single LINE (one branch per level; a branch with two or more stack children is refused - rebase or delete the extra branches first). Branches that are just old commits of the default branch are ignored, and unrelated branches are left alone. Branch reflogs (enabled by default) are used to track the chain; if they are disabled the functions fall back to a heuristic that only works while lower branches haven't advanced past where higher branches were based. In repos without a remote the default branch is guessed from the common names (`main`, `master`, ...) - set `STACK_DEFAULT_BRANCH` to override if the guess is wrong.
+- a test suite that exercises all three functions (clean rebases, conflicts with pause/resume across separate invocations, aborts, remote-based stacks, worktree guards, commit injection, dedup, and stack pushes including force-with-lease) lives in `stack-tests/run-tests.sh` - run it after changing the functions
+
 ## Security
 
 Use `git config --global --add safe.directory $DIR` to mark a directory as safe to use git in.
