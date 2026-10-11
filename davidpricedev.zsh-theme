@@ -278,7 +278,8 @@ prompt_status() {
 }
 
 prompt_aws() {
-  [[ -z "$AWS_PROFILE" || "$SHOW_AWS_PROMPT" = false ]] && return
+  # More robust check: ensure AWS_PROFILE is both set AND non-empty
+  [[ -z "${AWS_PROFILE:+x}" || "$SHOW_AWS_PROMPT" = false ]] && return
   case "$AWS_PROFILE" in
     *) prompt_segment "$AGNOSTER_AWS_BG" "$AGNOSTER_AWS_FG" "🔸 ${AWS_PROFILE:gs/%/%%}" ;;
   esac
