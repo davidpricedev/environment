@@ -16,7 +16,7 @@ if [ ! -f "${_GIT_CONFIG_TRACKING_FILE}" ]; then
   git config --global alias.root 'rev-parse --show-toplevel'
   git config --global alias.fpush "push --force-with-lease"
   git config --global alias.staash "stash --all"
-  git config --global alias.tree "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --all"
+  git config --global alias.tree "log --graph --date-order --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --all"
 
   date -Iseconds > "${_GIT_CONFIG_TRACKING_FILE}"
 fi
